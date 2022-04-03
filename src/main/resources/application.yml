@@ -1,0 +1,31 @@
+server:
+  port: 9090
+
+zuul:
+  prefix: /auth/library
+  routes:
+    category:
+      path: /category/**
+      url: http://localhost:9003/public/library/category-service/
+    author:
+      path: /author/**
+      url: http://localhost:9002/public/library/author-service/
+    book:
+      path: /book/**
+      url: http://localhost:9004/public/library/book-service/
+  sensitiveHeaders:
+    ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
